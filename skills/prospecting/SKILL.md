@@ -29,7 +29,9 @@ One VOYGR account has one key and one credit balance for every VOYGR API
 
 1. `VOYGR_API_KEY` if set.
 2. Otherwise `PLACECALL_API_KEY` if set (same account key, set by the
-   PlaceCall skill): run `export VOYGR_API_KEY="$PLACECALL_API_KEY"`.
+   PlaceCall skill). Each command runs in its own shell, so do the fallback
+   in the SAME command as the request:
+   `export VOYGR_API_KEY="$PLACECALL_API_KEY" && curl ...`.
 3. Otherwise tell the user to sign up at https://app.voygr.tech (free trial)
    and `export VOYGR_API_KEY=pk_live_...`.
 
