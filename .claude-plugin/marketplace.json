@@ -1,0 +1,21 @@
+{
+  "name": "prospecting",
+  "description": "VOYGR's marketplace for Prospecting. Lead lists of US local businesses for your agent.",
+  "owner": { "name": "VOYGR", "url": "https://voygr.tech" },
+  "plugins": [
+    {
+      "name": "prospecting",
+      "displayName": "VOYGR Prospecting",
+      "source": "./",
+      "description": "Find US local businesses and enrich them into a lead list: owners and key people with contacts, legal entity, open/closed status, and any custom attribute in plain English. Pay only for answered cells. Free trial at https://app.voygr.tech",
+      "version": "0.1.0",
+      "author": { "name": "VOYGR", "url": "https://voygr.tech" },
+      "homepage": "https://github.com/voygr-tech/prospecting",
+      "repository": "https://github.com/voygr-tech/prospecting",
+      "license": "MIT",
+      "keywords": ["prospecting","leads","lead-generation","enrichment","local-business","places","owners","b2b"],
+      "category": "productivity",
+      "skills": ["./skills/prospecting"]
+    }
+  ]
+}
