@@ -108,7 +108,7 @@ search (`POST /v1/lists/upload-url`, then `POST /v1/lists` with `upload_key`).
 
 ```bash
 curl -s -X POST https://api.voygr.tech/v1/jobs/deep-research -H "X-API-Key: $VOYGR_API_KEY" \
-  -H "Content-Type: application/json" -H "Idempotency-Key: $(uuidgen)" \
+  -H "Content-Type: application/json" -H "Idempotency-Key: <job-key>" \
   -d '{"list_id":"<list_id>","row_count":20,"fields":[
         {"name":"owners","include":["email","phone"]},
         {"name":"lab_grown_diamonds","description":"whether this jeweler sells lab-grown diamonds","value_type":"bool"}]}'
@@ -124,8 +124,10 @@ curl -s -X POST https://api.voygr.tech/v1/jobs/deep-research -H "X-API-Key: $VOY
   `value_type` (`bool`, `enum` with `allowed_values`, `string`, `number`).
 - The reserve is `row_count x fields`; you are charged only for filled cells.
 - Re-run only what is missing with `"skip_filled": true`, or retry specific
-  rows with `row_ids`. Always send an `Idempotency-Key` so a retry never
-  charges twice.
+  rows with `row_ids`.
+- `Idempotency-Key`: generate ONE value per job (e.g. `uuidgen`) before the
+  first submit and reuse that exact value on any retry of the same job. A new
+  value on retry creates and charges a second job.
 
 ### 7. Read results
 
@@ -152,7 +154,8 @@ run cost. Offer the CSV path.
 ## Errors
 
 - `402`: out of credits. Tell the user to top up in the app.
-- `403`: the key lacks access to this product; the user should contact VOYGR.
+- `403`: the key lacks access to prospecting; the user should sign in once at
+  https://app.voygr.tech with the same email (adds prospecting to the key).
 - `400` with a message: show the message; usually a bad geography, category
   or `row_count` mismatch.
 - Places outside the US are not covered.
