@@ -1,7 +1,7 @@
 {
   "name": "prospecting",
-  "description": "Find US local businesses and enrich them into a lead list: owners and key people with contacts, legal entity, open/closed status, and any custom attribute in plain English. Pay only for answered cells. Free trial at https://app.voygr.tech",
-  "version": "0.1.0",
+  "description": "Find US local businesses and enrich them into a lead list: owners and key people with contacts, legal entity, open/closed status, and any custom attribute in plain English. Completed lookups can be charged even when no answer is found. Free trial at https://app.voygr.tech",
+  "version": "0.1.1",
   "author": { "name": "VOYGR", "url": "https://voygr.tech" },
   "homepage": "https://github.com/voygr-tech/prospecting",
   "repository": "https://github.com/voygr-tech/prospecting",

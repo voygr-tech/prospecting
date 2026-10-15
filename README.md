@@ -6,8 +6,9 @@ open/closed status, hours, website, and any custom attribute you describe in
 plain English ("does this jeweler sell lab-grown diamonds").
 
 - 16M+ US places
-- Searching and counting are free; you pay per place imported and **only for
-  cells that get an answer**
+- Count and five-place preview are free; paid search and search-backed list
+  imports charge per place. Completed field lookups can be charged even when
+  no answer is found; failed lookups are free.
 - Results as a table in chat or a CSV export
 
 ## Get a key
@@ -42,8 +43,8 @@ If you already use [PlaceCall](https://github.com/voygr-tech/placecall), your
 > Find 20 independent jewelers in Austin, TX. For each, get the owner's name
 > and email and whether they sell lab-grown diamonds.
 
-The agent sizes the query for free, tells you the maximum cost, and asks
-before spending.
+The agent counts and previews the query for free, explains charges for paid
+search, import, and enrichment, and asks before spending.
 
 ## Use with PlaceCall
 
@@ -53,9 +54,11 @@ same balance.
 
 ## API
 
-Everything goes to `https://api.voygr.tech` with header `X-API-Key`. Full
-reference: https://api.voygr.tech/docs. Public credit rates:
-`GET https://api.voygr.tech/v1/pricing`.
+API requests go to `https://api.voygr.tech` with header `X-API-Key`; CSV bytes
+go to the presigned upload URL without that header. The public
+reference is at https://api.voygr.tech/docs; its prospecting coverage is still
+being audited. Account-specific place and fill rates are at `GET /v1/usage`.
+`GET /v1/pricing` does not cover search, list imports, or list fills.
 
 ## License
 

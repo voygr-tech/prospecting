@@ -1,7 +1,7 @@
 {
   "name": "prospecting",
-  "version": "0.1.0",
-  "description": "Find US local businesses and enrich them into a lead list: owners and key people with contacts, legal entity, open/closed status, and any custom attribute in plain English. Pay only for answered cells. Free trial at https://app.voygr.tech",
+  "version": "0.1.1",
+  "description": "Find US local businesses and enrich them into a lead list: owners and key people with contacts, legal entity, open/closed status, and any custom attribute in plain English. Completed lookups can be charged even when no answer is found. Free trial at https://app.voygr.tech",
   "author": { "name": "VOYGR", "email": "support@voygr.tech", "url": "https://voygr.tech" },
   "homepage": "https://github.com/voygr-tech/prospecting",
   "repository": "https://github.com/voygr-tech/prospecting",
@@ -11,7 +11,7 @@
   "interface": {
     "displayName": "VOYGR Prospecting",
     "shortDescription": "Lead lists of US local businesses",
-    "longDescription": "Search 16M+ US places by city and category, save the matches as a list, then fill the fields you need: owners and key people with email and phone, legal entity, open/closed status, hours, website, or a custom attribute you describe in plain English. Searching and counting are free; you pay per place imported and only for cells that get an answer. The skill sends HTTPS requests to api.voygr.tech with your own API key (free trial at https://app.voygr.tech). US places only.",
+    "longDescription": "Search 16M+ US places by city and category, save the matches as a list, then fill the fields you need: owners and key people with email and phone, legal entity, open/closed status, hours, website, or a custom attribute you describe in plain English. Count and preview are free; paid search and search-backed list imports charge per place. Completed field lookups may be charged without an answer. The skill sends your API key only to api.voygr.tech; CSV uploads use a presigned URL (free trial at https://app.voygr.tech). US places only.",
     "developerName": "VOYGR",
     "category": "Productivity"
   }

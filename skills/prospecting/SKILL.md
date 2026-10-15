@@ -1,10 +1,10 @@
 ---
 name: prospecting
-description: Find US local businesses and enrich them into a lead list - owners and key people with contacts, legal entity, open/closed status, hours, website, and any custom attribute you describe in plain English ("does this jeweler sell lab-grown diamonds"). 16M+ US places. You pay only for cells that get an answer.
+description: Use when finding US local businesses by geography or category, importing a place CSV, or enriching a saved list with owners, contacts, business details, or custom research fields.
 license: MIT
-compatibility: Needs curl and outbound HTTPS to api.voygr.tech, the only host this skill contacts and the only place it sends VOYGR_API_KEY. US places only.
+compatibility: Needs curl and outbound HTTPS to api.voygr.tech; CSV import also posts the file to the returned presigned upload URL. Send VOYGR_API_KEY only to api.voygr.tech. US places only.
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   author: voygr-tech
   openclaw:
     primaryEnv: VOYGR_API_KEY
@@ -19,8 +19,9 @@ metadata:
 
 Turn "find me X in Y and tell me Z about each" into a structured lead list.
 Search a US geography and category, save the matches as a list, then fill
-the fields the user wants. Every request goes to `https://api.voygr.tech`
-with header `X-API-Key: $VOYGR_API_KEY`.
+the fields the user wants. API requests go to `https://api.voygr.tech`
+with header `X-API-Key: $VOYGR_API_KEY`. CSV bytes go to a presigned upload
+URL; never send the API key to that URL.
 
 ## Setup
 
@@ -41,14 +42,30 @@ with the same email, which adds prospecting to the same key.
 
 ## Money rules (follow these every time)
 
-- Searching, counting, field suggestions and pricing are **free**. Importing
-  places into a list costs credits **per place imported**; filling costs
-  credits **per answered cell**. Cells with no answer are free.
-- Before any paid step, **state the maximum cost and get the user's OK**:
-  places x rate for imports, rows x fields for fills. Read rates from
-  `GET /v1/pricing` (no key needed) and the balance from `GET /v1/usage`.
-- Start small: default to **20 places** unless the user asks for more. Never
-  import "all matches" without an explicit number from the user.
+- Geography suggestions, categories, count, the five-place preview, field
+  suggestions and CSV upload are free. `POST /v1/places/search` costs credits
+  per returned place. A search-backed list costs credits per place imported,
+  even if those places were already returned by a paid search. A CSV upload
+  of the user's own places is free.
+- A list fill reserves credits at submit. Completed lookups are charged at
+  each field's price whether they find a value or abstain; failed lookups are
+  free. Unused reservation is released when the job settles; check the job
+  after cancellation too. Do not describe an empty cell as free without
+  checking its job status.
+- Before a paid request, explain its possible charge and get the user's OK.
+  Use `GET /v1/usage` for the account's balance, `credits_per_place` and
+  `credits_per_field`. `GET /v1/pricing` does **not** quote list or search
+  rates. List fields have different prices, so do not estimate a fill by
+  multiplying rows by the number of fields. In this skill's pricing version,
+  `owners` is 2 field-price units per row for name and role; direct email adds
+  1, phone adds 2, and a custom field defaults to 3. Other presets can cost
+  more. The public rate endpoints do not expose the full per-field price
+  table; for those fields, say the exact maximum is unavailable through the
+  API and do not present a flat-rate guess as a ceiling. Record the job's
+  reservation and actual charge after settlement.
+- Default to **20 places** if the user gives no number. If the user asks for
+  all matches, use the count to set an explicit list import limit (subject to
+  the 10,000-row cap) and explain the resulting cost before submitting.
 
 ## Workflow
 
@@ -59,7 +76,9 @@ curl -s "https://api.voygr.tech/v1/geo/suggest?q=Austin%20TX&limit=5" -H "X-API-
 ```
 
 Use the returned `geography_id` (e.g. `city:TX:austin`). Ask the user if the
-match is ambiguous.
+match is ambiguous. Prefer a city, ZIP, or state geography ID to a hand-drawn
+bounding box; a box can be much wider than the place the user named, and the
+free preview does not accept boxes.
 
 ### 2. Pick categories (free)
 
@@ -67,9 +86,14 @@ match is ambiguous.
 curl -s https://api.voygr.tech/v1/places/categories -H "X-API-Key: $VOYGR_API_KEY"
 ```
 
-Categories are taxonomy tags like `amenity=restaurant`. If the category list
-looks thin for a vertical, also try a name filter `q` (e.g. `"q": "jewel"`)
-and compare counts in step 3.
+`categories` filters taxonomy tags such as `shop=jewelry`.
+`categories_any_level` filters category-path names such as `gay_bar`; a parent
+such as `bar` also matches its children. These filters are different and are
+ANDed if both are sent. For a category-path request, use
+`categories_any_level` in count, preview, search, and search-backed list
+creation. Do not infer that the API lacks a category because the other filter
+returns zero. If the category is unclear, compare free counts and previews
+before any paid search; `q` matches place names, not category paths.
 
 ### 3. Size the query before spending (free)
 
@@ -79,8 +103,38 @@ curl -s -X POST https://api.voygr.tech/v1/places/count -H "X-API-Key: $VOYGR_API
   -d '{"geography_id":"city:TX:austin","categories":["shop=jewelry"],"independents_only":true}'
 ```
 
-`independents_only: true` drops national chains, which have no reachable
-local owner. Report the count to the user and agree on a limit.
+`independents_only: true` hides likely national chains. It is a
+name-frequency heuristic and can also hide independent places.
+Read `capped` and `count_is_estimate` before calling a count exact. Preview
+the same filter for free to inspect five matching places. For a category-path
+search, use the same `categories_any_level` body in both calls:
+
+```bash
+curl -s -X POST https://api.voygr.tech/v1/places/count -H "X-API-Key: $VOYGR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"geography_id":"city:NY:new_york","categories_any_level":["gay_bar"]}'
+```
+
+```bash
+curl -s -X POST https://api.voygr.tech/v1/places/preview -H "X-API-Key: $VOYGR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"geography_id":"city:NY:new_york","categories_any_level":["gay_bar"]}'
+```
+
+Preview has no pagination. The live test of this NYC filter returned 63
+matches. If the user needs search results before creating a list,
+`/v1/places/search` is paid. After approval, use the same filter with a
+specific limit:
+
+```bash
+curl -s -X POST https://api.voygr.tech/v1/places/search -H "X-API-Key: $VOYGR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"geography_id":"city:NY:new_york","categories_any_level":["gay_bar"],"limit":20}'
+```
+
+Follow `next_cursor` until null or the approved total limit, and account for
+search charges separately from a later list import. Otherwise create the list
+directly from the approved search filter. Report the count and scope.
 
 ### 4. Turn the user's question into fields (free)
 
@@ -90,8 +144,10 @@ curl -s -X POST https://api.voygr.tech/v1/fields/suggest -H "X-API-Key: $VOYGR_A
   -d '{"goal":"owner name and email, and whether they sell lab-grown diamonds"}'
 ```
 
-The response is already in the shape a fill job accepts. Anything listed as
-unsupported cannot be delivered; tell the user instead of trying.
+Review the proposed field specs against the user's request and the built-in
+field catalog; do not replace a precise `owners` field with a vague custom
+owner question. Anything listed as unsupported cannot be delivered; tell the
+user instead of trying.
 
 ### 5. Save the places as a list (paid: per place imported)
 
@@ -102,9 +158,14 @@ curl -s -X POST https://api.voygr.tech/v1/lists -H "X-API-Key: $VOYGR_API_KEY" \
 ```
 
 Keep the returned `list_id`. A user's own CSV can be used instead of a
-search (`POST /v1/lists/upload-url`, then `POST /v1/lists` with `upload_key`).
+search (`POST /v1/lists/upload-url` with `filename`, multipart POST the CSV to
+the returned `url` with every returned `fields` entry, then `POST /v1/lists`
+with the returned `key` as `upload_key`). The presigned URL can be on a
+different host; send no `X-API-Key` header there. Read the list and row count
+before filling. For a category-path list, use `categories_any_level` inside
+`search`, exactly as in count and preview.
 
-### 6. Fill the fields (paid: per answered cell)
+### 6. Fill the fields (paid: per completed lookup)
 
 ```bash
 curl -s -X POST https://api.voygr.tech/v1/jobs/deep-research -H "X-API-Key: $VOYGR_API_KEY" \
@@ -116,13 +177,17 @@ curl -s -X POST https://api.voygr.tech/v1/jobs/deep-research -H "X-API-Key: $VOY
 
 - `row_count` must equal the number of rows targeted (the list size, or the
   length of `row_ids`).
-- `owners` returns the individual owner(s) as one value, `{name, role}` plus
-  any contacts in `include` (each contact is one more credit per row).
+- `owners` returns the individual owner(s) with names and roles plus any
+  contacts in `include`. Contact prices differ; do not treat each as one
+  credit. An unknown owner or contact is not proof the person does not exist.
   `owner_org` covers businesses owned by a company; `key_people` covers
   leadership beyond the owner.
 - Custom fields: give a short `name`, a one-sentence `description`, and a
   `value_type` (`bool`, `enum` with `allowed_values`, `string`, `number`).
-- The reserve is `row_count x fields`; you are charged only for filled cells.
+- The reserve is `row_count x the sum of the requested field prices` (including
+  people contact units), multiplied by the account's fill rate. A completed
+  lookup that abstains can be charged; a failed lookup is free. Read the job's
+  reservation and settled charge rather than inferring them from filled cells.
 - Re-run only what is missing with `"skip_filled": true`, or retry specific
   rows with `row_ids`.
 - `Idempotency-Key`: generate ONE value per job (e.g. `uuidgen`) before the
@@ -137,19 +202,26 @@ Poll the list; cells fill in as rows complete (poll every ~10 s, not faster):
 curl -s "https://api.voygr.tech/v1/lists/<list_id>?limit=100" -H "X-API-Key: $VOYGR_API_KEY"
 ```
 
+Also poll `GET /v1/jobs/<batch_id>` for `completed`, `failed`, or `cancelled`
+and compare `GET /v1/usage` before and after settlement. A cancellation
+response does not by itself prove the credit reservation was released.
+
 Export the whole list as CSV when done:
 
 ```bash
 curl -s "https://api.voygr.tech/v1/lists/<list_id>/export" -H "X-API-Key: $VOYGR_API_KEY" -o leads.csv
 ```
 
-Multi-valued columns are joined with `; ` and keep empty slots aligned.
+Inspect CSV headers and values before describing its shape. Some nested values,
+including owners and contacts, may appear as JSON in a CSV cell rather than
+separate columns.
 
 ## Presenting results
 
-Summarize as a table: place, address, the requested fields. Say how many
-cells came back empty ("no answer" is a normal, free outcome) and what the
-run cost. Offer the CSV path.
+Summarize as a table: place, address, the requested fields. Distinguish a
+returned value, an abstention, a failed lookup, and an unprocessed cell. Show
+the actual charge and any remaining reservation after checking job status and
+usage. Offer the CSV path.
 
 ## Errors
 
