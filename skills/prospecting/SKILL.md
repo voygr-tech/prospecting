@@ -4,7 +4,7 @@ description: Use when finding US local businesses by geography or category, impo
 license: MIT
 compatibility: Needs curl and outbound HTTPS to api.voygr.tech; CSV import also posts the file to the returned presigned upload URL. Send VOYGR_API_KEY only to api.voygr.tech. US places only.
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
   author: voygr-tech
   openclaw:
     primaryEnv: VOYGR_API_KEY
@@ -78,7 +78,10 @@ curl -s "https://api.voygr.tech/v1/geo/suggest?q=Austin%20TX&limit=5" -H "X-API-
 Use the returned `geography_id` (e.g. `city:TX:austin`). Ask the user if the
 match is ambiguous. Prefer a city, ZIP, or state geography ID to a hand-drawn
 bounding box; a box can be much wider than the place the user named, and the
-free preview does not accept boxes.
+free preview does not accept boxes. Do not construct an ID by replacing spaces
+in a place name with underscores. Check suggested IDs with free count and
+preview calls before a paid search. A plausible label or bounding box alone
+does not establish that the geography contains the expected places.
 
 ### 2. Pick categories (free)
 
@@ -112,24 +115,28 @@ search, use the same `categories_any_level` body in both calls:
 ```bash
 curl -s -X POST https://api.voygr.tech/v1/places/count -H "X-API-Key: $VOYGR_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"geography_id":"city:NY:new_york","categories_any_level":["gay_bar"]}'
+  -d '{"geography_id":"city:NY:new york","categories_any_level":["gay_bar"]}'
 ```
 
 ```bash
 curl -s -X POST https://api.voygr.tech/v1/places/preview -H "X-API-Key: $VOYGR_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"geography_id":"city:NY:new_york","categories_any_level":["gay_bar"]}'
+  -d '{"geography_id":"city:NY:new york","categories_any_level":["gay_bar"]}'
 ```
 
-Preview has no pagination. The live test of this NYC filter returned 63
-matches. If the user needs search results before creating a list,
+Preview has no pagination. In the live NYC test, `city:NY:new york` returned
+63 `gay_bar` matches, while `city:NY:new_york` was rejected as
+`UNKNOWN_GEOGRAPHY`. The suggested `city:NY:new york city` returned zero for
+the same filter, and the `city:NY:new york` bounding box was unusually wide;
+verify geography scope from the returned places before claiming citywide
+coverage. If the user needs search results before creating a list,
 `/v1/places/search` is paid. After approval, use the same filter with a
 specific limit:
 
 ```bash
 curl -s -X POST https://api.voygr.tech/v1/places/search -H "X-API-Key: $VOYGR_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"geography_id":"city:NY:new_york","categories_any_level":["gay_bar"],"limit":20}'
+  -d '{"geography_id":"city:NY:new york","categories_any_level":["gay_bar"],"limit":20}'
 ```
 
 Follow `next_cursor` until null or the approved total limit, and account for
