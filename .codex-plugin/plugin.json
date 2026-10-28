@@ -1,7 +1,7 @@
 {
   "name": "prospecting",
   "version": "0.2.0",
-  "description": "Find US local businesses, save lists, and fill owner contacts, status, and custom fields. Sign in to your VOYGR account on first use.",
+  "description": "Find US local businesses and enrich lists with owners, contacts, status, and custom fields. Completed lookups can be charged even without an answer. Sign in on first use.",
   "author": { "name": "VOYGR", "email": "support@voygr.tech", "url": "https://voygr.tech" },
   "homepage": "https://github.com/voygr-tech/prospecting",
   "repository": "https://github.com/voygr-tech/prospecting",
@@ -11,7 +11,7 @@
   "interface": {
     "displayName": "VOYGR Prospecting",
     "shortDescription": "Lead lists of US local businesses",
-    "longDescription": "Find US local businesses, save them as lists, and fill owner contacts, status, hours, websites, or custom attributes. The plugin connects to the Prospecting MCP server at api.voygr.tech. Sign in once in your browser; no API key is needed for the plugin. Counting and reading are free. The skill asks before paid actions, and the server quotes larger runs. US places only.",
+    "longDescription": "Search US places, save matches as lists, and fill owners, contacts, status, hours, or custom fields. The plugin connects to the Prospecting MCP server at api.voygr.tech; sign in once in a browser, without copying an API key. Counting and reading are free. Imports charge per place, and completed lookups may be charged without an answer. The skill asks before paid actions; the server quotes larger runs. US places only.",
     "developerName": "VOYGR",
     "category": "Productivity",
     "capabilities": ["Find local businesses", "Enrich business lists", "Export results"],
