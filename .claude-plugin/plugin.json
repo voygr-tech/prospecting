@@ -1,12 +1,19 @@
 {
   "name": "prospecting",
-  "description": "Find US local businesses and enrich them into a lead list: owners and key people with contacts, legal entity, open/closed status, and any custom attribute in plain English. Pay only for answered cells. Free trial at https://app.voygr.tech",
-  "version": "0.1.0",
+  "description": "Find US local businesses, save lists, and fill owner contacts, status, and custom fields. Sign in to your VOYGR account on first use.",
+  "version": "0.2.0",
   "author": { "name": "VOYGR", "url": "https://voygr.tech" },
   "homepage": "https://github.com/voygr-tech/prospecting",
   "repository": "https://github.com/voygr-tech/prospecting",
   "license": "MIT",
+  "privacyPolicyUrl": "https://voygr.tech/privacy-policy/",
   "keywords": ["prospecting","leads","lead-generation","enrichment","local-business","places","owners","b2b"],
   "icon": "./assets/icon.png",
-  "skills": ["./skills/prospecting"]
+  "skills": ["./skills/prospecting"],
+  "mcpServers": {
+    "prospecting": {
+      "type": "http",
+      "url": "https://api.voygr.tech/places/mcp"
+    }
+  }
 }
