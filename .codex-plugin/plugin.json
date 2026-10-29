@@ -24,7 +24,7 @@
     "logo": "./assets/icon.png"
   },
   "mcpServers": {
-    "prospecting": {
+    "places": {
       "type": "http",
       "url": "https://api.voygr.tech/places/mcp"
     }

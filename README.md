@@ -27,7 +27,7 @@ Run inside Claude Code:
 /plugin install prospecting@prospecting
 ```
 
-Choose user scope if prompted. Run `/mcp`, select `prospecting`, and sign in.
+Choose user scope if prompted. Run `/mcp`, select `plugin:prospecting:places`, and sign in.
 The skill answers to `/prospecting:prospecting`.
 
 ### Codex
@@ -37,7 +37,7 @@ Run in your shell:
 ```sh
 codex plugin marketplace add voygr-tech/prospecting
 codex plugin add prospecting@prospecting
-codex mcp login prospecting
+codex mcp login places
 ```
 
 The last command opens browser sign-in. If Codex has no `plugin` command,

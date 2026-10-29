@@ -12,8 +12,8 @@ class TestPluginPackaging(unittest.TestCase):
         for manifest in (".claude-plugin/plugin.json", ".codex-plugin/plugin.json"):
             with self.subTest(manifest=manifest):
                 data = json.loads((ROOT / manifest).read_text())
-                self.assertEqual(data["mcpServers"]["prospecting"],
-                                 {"type": "http", "url": MCP_URL})
+                self.assertEqual(data["mcpServers"],
+                                 {"places": {"type": "http", "url": MCP_URL}})
 
     def test_package_versions_match(self):
         manifests = (
@@ -34,7 +34,8 @@ class TestPluginPackaging(unittest.TestCase):
             "/plugin install prospecting@prospecting",
             "codex plugin marketplace add voygr-tech/prospecting",
             "codex plugin add prospecting@prospecting",
-            "codex mcp login prospecting",
+            "select `plugin:prospecting:places`",
+            "codex mcp login places",
         ):
             with self.subTest(command=command):
                 self.assertIn(command, readme)
