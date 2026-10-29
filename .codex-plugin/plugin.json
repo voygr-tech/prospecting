@@ -1,6 +1,6 @@
 {
   "name": "prospecting",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Find US local businesses and enrich lists with owners, contacts, status, and custom fields. Completed lookups can be charged even without an answer. Sign in on first use.",
   "author": { "name": "VOYGR", "email": "support@voygr.tech", "url": "https://voygr.tech" },
   "homepage": "https://github.com/voygr-tech/prospecting",
