@@ -1,4 +1,5 @@
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -26,6 +27,10 @@ class TestPluginPackaging(unittest.TestCase):
             data = json.loads((ROOT / manifest).read_text())
             versions.append(data["plugins"][0]["version"] if "plugins" in data else data["version"])
         self.assertEqual(len(set(versions)), 1)
+        skill = (ROOT / "skills/prospecting/SKILL.md").read_text()
+        skill_version = re.search(r'^  version: "([^"]+)"$', skill, re.MULTILINE)
+        self.assertIsNotNone(skill_version)
+        self.assertEqual(skill_version.group(1), versions[0])
 
     def test_install_instructions_include_plugin_and_browser_login(self):
         readme = (ROOT / "README.md").read_text()
@@ -47,6 +52,34 @@ class TestPluginPackaging(unittest.TestCase):
             with self.subTest(item=item):
                 self.assertIn(item, skill)
         self.assertIn(MCP_URL, skill)
+
+    def test_skill_covers_qualified_shortlist_workflow(self):
+        skill = (ROOT / "skills/prospecting/SKILL.md").read_text()
+        for item in (
+            "## Qualified prospect shortlist",
+            "fit criteria",
+            "daily assistant spend limit",
+            "original answer",
+            "abstained",
+            "review queue",
+            "random sample",
+            "SiPhox",
+        ):
+            with self.subTest(item=item):
+                self.assertIn(item, skill)
+
+    def test_readme_has_mcp_only_shortlist_prompt(self):
+        readme = (ROOT / "README.md").read_text()
+        for item in (
+            "## Build a qualified shortlist",
+            "count and preview",
+            "fresh fill quote",
+            "original answers",
+            "review queue",
+            "Do not start a paid action until I approve",
+        ):
+            with self.subTest(item=item):
+                self.assertIn(item, readme)
 
 
 if __name__ == "__main__":
