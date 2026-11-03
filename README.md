@@ -114,6 +114,32 @@ The agent counts and previews the query for free, explains charges for paid
 search, import, and enrichment, and asks before spending. For larger runs,
 the MCP server also returns a credit quote and asks for confirmation.
 
+## Build a qualified shortlist
+
+Claude Chat, ChatGPT and other clients connected only to the MCP server may
+not load this repository's skill. Copy this prompt and replace the brackets:
+
+> Find candidate businesses in [US geography] in [categories] for [purpose].
+> A good fit must [criteria]. Use the VOYGR Prospecting tools. First, resolve
+> the categories, count and preview the same search for free, and tell me what
+> the filters can and cannot establish. Propose the smallest useful research
+> fill, including one structured assessment field if it can cover my fit
+> criteria. Show me the exact field instructions, current rates, daily
+> assistant spend limit, the import quote and a fill estimate. Stop there.
+> Do not start a paid action until I approve its scope and quote. After each
+> approved step, verify the row count or job result before continuing. Get a
+> fresh fill quote for the actual rows and fields before asking me to approve
+> that job. Export every row, keep the original answers and empty or failed
+> results, and make a review queue using my criteria. Flag unsupported claims
+> and missing links.
+> Treat the queue as candidates until someone checks sources, duplicates and
+> contact routes.
+
+A completed lookup can cost credits even when it returns no answer. Ask for a
+new quote if the scope changes or a quote expires. In a fresh chat after a
+plugin update, try the prompt through the free count, preview and proposed
+field first; review the result before approving any spend.
+
 ## Use with PlaceCall
 
 Build a list here, then have [PlaceCall](https://github.com/voygr-tech/placecall)

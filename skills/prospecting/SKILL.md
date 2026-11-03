@@ -4,7 +4,7 @@ description: Use when finding US local businesses by geography or category, impo
 license: MIT
 compatibility: Uses Prospecting MCP tools with browser sign-in when connected. Otherwise needs curl and outbound HTTPS to api.voygr.tech; CSV import posts the file to a presigned upload URL. Send VOYGR_API_KEY only to api.voygr.tech. US places only.
 metadata:
-  version: "0.2.0"
+  version: "0.2.2"
   author: voygr-tech
   openclaw:
     primaryEnv: VOYGR_API_KEY
@@ -58,6 +58,58 @@ If the tools are unavailable, use the API-key path below.
    the assistant spend limit. Report empty answers and actual credits charged.
    A completed lookup can be charged even if it returns no answer; failed
    lookups are free.
+
+## Qualified prospect shortlist
+
+Use this workflow when the user wants several fit conditions in addition to
+geography and category. Apply the money rules and the MCP or API-key steps
+below at every paid action.
+
+1. Ask for the geography, candidate categories, fit criteria, and intended use.
+   Separate conditions that search can filter from claims that need research.
+   Resolve the categories, count and preview the same query for free, and show
+   the exact filters, estimate or cap, and any obvious mismatches. Do not treat
+   the search count as the number of qualified businesses or as search recall.
+2. Propose the smallest useful set of fields before import. Use precise preset
+   fields for people or contacts. For a screening question with related claims,
+   consider one custom Text/string assessment field that asks for structured
+   JSON: a fit label, each required claim's `yes|no|unknown` status, a short
+   reason, and a source URL or null. Define the label rules and say `unknown`
+   when a claim is unverified. Keep the description within the tool's limit;
+   show the user the exact text. This saves field charges only if that one
+   field answers the user's question. The product does not enforce the JSON
+   schema or verify its citations. Quote a small pilot fill if needed, and get
+   approval for its charge too.
+3. Show the import scope, maximum charge and available credits. Get approval,
+   then import the approved rows. Read the final list count, compare it with
+   the approved count, and report any cap, shortfall or truncation. Keep the
+   original list when testing a revised assessment.
+4. Quote the fill for the actual row count and selected fields. Check the
+   daily assistant spend limit, amount already used and remaining allowance;
+   a sufficient balance alone does not mean the job fits today's limit. Show
+   the exact field description and a fresh quote, then wait for approval. If
+   the job exceeds the limit, explain the options and get approval for any
+   limit change, row filter or split. Do not silently repeat a completed fill.
+5. After settlement, report filled, abstained (`no_answer`), failed and
+   unprocessed cells separately, alongside the actual charge. Export every
+   row, including empty and failed answers. Keep the original answer, status,
+   confidence, place ID and run details unchanged. Parse valid JSON into
+   separate filterable columns when possible; flag malformed or missing
+   values instead of rewriting them. If this client cannot parse the full
+   export, give the user the raw CSV and the exact filter to apply.
+6. Apply the user's fit criteria to the parsed values and call the result a
+   review queue. Check contradictions between fit and claim statuses and
+   positive claims with missing URLs. Review those flags separately, then draw
+   a recorded random sample from each remaining fit group. A URL points to a
+   source to review; it does not prove the claim. Record corrected judgments
+   beside the original answer. Check duplicates and a usable contact route
+   before calling a row an outreach prospect. Report source accuracy on returned businesses
+   separately from how many eligible businesses the search found.
+
+For example, SiPhox screened Florida nutrition and health coaching practices
+for current location, ongoing coaching and bloodwork review. Its first review
+queue required `fit=strong` and `yes` for all three claims. Those criteria are
+specific to that request; ask each user for their own rules.
 
 ## API-key path (when MCP tools are unavailable)
 
