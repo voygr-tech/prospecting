@@ -1,0 +1,24 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.voygr-tech/prospecting",
+  "description": "Find 16M+ US businesses by city/category; build lead lists with owners, contacts, status and hours.",
+  "title": "VOYGR Prospecting",
+  "repository": {
+    "url": "https://github.com/voygr-tech/prospecting",
+    "source": "github"
+  },
+  "version": "0.2.3",
+  "websiteUrl": "https://voygr.tech/prospecting/",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/voygr-tech/prospecting/main/assets/icon.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.voygr.tech/places/mcp"
+    }
+  ]
+}

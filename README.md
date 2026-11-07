@@ -1,9 +1,10 @@
 # VOYGR Prospecting
 
-Give your agent a lead list. Find US local businesses by city and category,
-then enrich them: owners and key people with email and phone, legal entity,
-open/closed status, hours, website, and any custom attribute you describe in
-plain English ("does this jeweler sell lab-grown diamonds").
+Find US local businesses by city and category and build lead lists with owners, contacts, open/closed status and hours. 16M+ US places.
+
+Enrich your US business lists with owners and key people with email and phone,
+legal entity, website, and any custom attribute you describe in plain English
+("does this jeweler sell lab-grown diamonds").
 
 - 16M+ US places
 - Count and five-place preview are free; paid search and search-backed list
