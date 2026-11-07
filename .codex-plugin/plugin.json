@@ -1,7 +1,7 @@
 {
   "name": "prospecting",
-  "version": "0.2.2",
-  "description": "Find US local businesses and enrich lists with owners, contacts, status, and custom fields. Completed lookups can be charged even without an answer. Sign in on first use.",
+  "version": "0.2.3",
+  "description": "Find US local businesses by city and category and build lead lists with owners, contacts, open/closed status and hours. 16M+ US places. Completed lookups can be charged even without an answer. Sign in on first use.",
   "author": { "name": "VOYGR", "email": "support@voygr.tech", "url": "https://voygr.tech" },
   "homepage": "https://github.com/voygr-tech/prospecting",
   "repository": "https://github.com/voygr-tech/prospecting",
@@ -10,8 +10,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "VOYGR Prospecting",
-    "shortDescription": "Lead lists of US local businesses",
-    "longDescription": "Search US places, save matches as lists, and fill owners, contacts, status, hours, or custom fields. The plugin connects to the Prospecting MCP server at api.voygr.tech; sign in once in a browser, without copying an API key. Counting and reading are free. Imports charge per place, and completed lookups may be charged without an answer. The skill asks before paid actions; the server quotes larger runs. US places only.",
+    "shortDescription": "US business data and lead lists",
+    "longDescription": "Find US local businesses by city and category and build lead lists with owners, contacts, open/closed status and hours. 16M+ US places. Fill custom fields in plain English. The plugin connects to the Prospecting MCP server at api.voygr.tech; sign in once in a browser, without copying an API key. Counting and reading are free. Imports charge per place, and completed lookups may be charged without an answer. The skill asks before paid actions; the server quotes larger runs. US places only.",
     "developerName": "VOYGR",
     "category": "Productivity",
     "capabilities": ["Find local businesses", "Enrich business lists", "Export results"],

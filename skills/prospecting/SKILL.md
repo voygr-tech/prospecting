@@ -1,10 +1,10 @@
 ---
 name: prospecting
-description: Use when finding US local businesses by geography or category, importing a place CSV, or enriching a saved list with owners, contacts, business details, or custom research fields.
+description: Use when finding US local businesses by city or category, building lead lists, importing a US business CSV, or enriching a saved list with owners, contacts, open/closed status, hours, or custom research fields.
 license: MIT
 compatibility: Uses Prospecting MCP tools with browser sign-in when connected. Otherwise needs curl and outbound HTTPS to api.voygr.tech; CSV import posts the file to a presigned upload URL. Send VOYGR_API_KEY only to api.voygr.tech. US places only.
 metadata:
-  version: "0.2.2"
+  version: "0.2.3"
   author: voygr-tech
   openclaw:
     primaryEnv: VOYGR_API_KEY
