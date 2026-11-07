@@ -21,6 +21,7 @@ class TestPluginPackaging(unittest.TestCase):
             ".claude-plugin/plugin.json",
             ".codex-plugin/plugin.json",
             ".claude-plugin/marketplace.json",
+            "server.json",
         )
         versions = []
         for manifest in manifests:
